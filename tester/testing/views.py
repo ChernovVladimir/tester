@@ -1,4 +1,3 @@
-from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse,Http404
 from django.views import View
@@ -13,7 +12,7 @@ from django.template import RequestContext,loader
 
 class IndexView(ListView):
     template_name = 'testing/index.html'
-    context_object_name = 'latest_title_list'
+    context_object_name = 'tests'
 
     def get_queryset(self):
         return Test.objects.order_by('-creation_date')[:5]
@@ -35,8 +34,18 @@ class QuestionDetail(TemplateView):
         print(context['question'])
         q_pk = context['question'].pk
         context['answers'] = Answer.objects.filter(question=q_pk).all()
+
+        if n + 1 == Question.objects.filter(test=kwargs['test_pk']).count():
+            context['next_number'] = None
+        else:
+            context['next_number'] = n + 2
+        context["test_pk"] = kwargs['test_pk']
         return context
-#
+
+    def post(self, request):
+        print(request.POST['answer'])
+        return HttpResponse("You're are voting on question.")
+
 # def test(request, title_id):
 #     question = get_object_or_404(Question, pk=title_id)
 #     return render(request, 'testing/detail.html', {'question': question})

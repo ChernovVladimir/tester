@@ -1,6 +1,29 @@
+<!DOCTYPE html>
 <h1>({{question.id}}) {{ question.text }}</h1>
+
 <ul>
 {% for answer in answers %}
-    <li>{{ answer.text }}</li>
+    <li>{{answer.text }}</li>
+
 {% endfor %}
 </ul>
+
+<form action="{% url 'testing:vote' %}" method="post">
+    {% csrf_token %}
+    {%for answer in answers %}
+        <input type="radio" name="answer" id="answer{{forloop.counter}}" value="{{answer.id}}" />
+        <label for="answer{{forloop.counter}}">{{answer.text}}</label><br />
+    {% endfor %}
+    <input type="submit" value="Send">
+</form>
+
+
+<form action="{% url 'testing:vote' %}" method="post">
+    {% csrf_token %}
+    <input type="text" name="value" value="1234">
+    <input type="submit" value="Send">
+</form>
+
+{% if next_number %}
+    <a href="{% url 'testing:question' test_pk=test_pk question_num=next_number %}">Next</a>
+{% endif %}

@@ -1,9 +1,13 @@
-{% if latest_title_list %}
+<ul>Тесты</ul>
+{% block title %}Тестирование{% endblock title %}
+
+{% if tests %}
     <ul>
-    {% for title in latest_title_list %}
-        <li>{{title}}</li>
+    {% for t in tests %}
+        <li><a href="{% url 'testing:redirect_to_questions' pk=t.id %}">{{ t.title }}</a> </li>
     {% endfor %}
     </ul>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
+
